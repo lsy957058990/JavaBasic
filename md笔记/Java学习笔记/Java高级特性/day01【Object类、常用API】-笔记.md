@@ -113,7 +113,7 @@ public class Person {
         if (o == null || getClass() != o.getClass())
             return false;
         // 转换为当前类型
-        Person person = (Person) o;
+        Person person = (Person) o;//向下转型
         // 要求基本类型相等，并且将引用类型交给java.util.Objects类的equals静态方法取用结果
         return age == person.age && Objects.equals(name, person.name);
     }
@@ -122,11 +122,7 @@ public class Person {
 
 这段代码充分考虑了对象为空、类型一致等问题，但方法内容并不唯一。大多数IDE都可以自动生成equals方法的代码内容。在IntelliJ IDEA中，可以使用`Code`菜单中的`Generate…`选项，也可以使用快捷键`alt+insert`，并选择`equals() and hashCode()`进行自动代码生成。
 
-![](img\equals方法1.png)
 
-![](img\equals方法2.png)
-
-![](img\equals方法3.png)
 
 > tips：Object类当中的hashCode等其他方法，今后学习。
 
@@ -270,14 +266,15 @@ import java.text.ParseException;
 import java.text.SimpleDateFormat;
 import java.util.Date;
 /*
- 把String转换成Date对象
+ 把String转换成Date对象,那么不需要创建新的Date对象。
 */
 public class Demo04DateFormatMethod {
     public static void main(String[] args) throws ParseException {
-        DateFormat df = new SimpleDateFormat("yyyy年MM月dd日");
+        DateFormat df = new SimpleDateFormat("yyyy年MM月dd日");	//DateFormat为抽象类，用多态的方法创建对象	// 并且构造参数并不是一个具体的日期，而是定义一个具体的格式，告诉你我的对象是这个格式的
         String str = "2018年12月11日";
-        Date date = df.parse(str);
-        System.out.println(date); // Tue Dec 11 00:00:00 CST 2018
+        Date date = df.parse(str);//注：解析字符串只能解析调用parse方法的对象的日期相同构造格式的字符串
+        
+        System.out.println(date); // Tue Dec 11 00:00:00 CST 2018	//CST为时区缩写
     }
 }
 ```
@@ -305,7 +302,7 @@ public static void function() throws Exception {
 	// 创建SimpleDateFormat对象,写日期模式
 	SimpleDateFormat sdf = new SimpleDateFormat("yyyy-MM-dd");
 	// 调用方法parse,字符串转成日期对象
-	Date birthdayDate = sdf.parse(birthdayString);	
+	Date birthdayDate = sdf.parse(birthdayString);		
 	// 获取今天的日期对象
 	Date todayDate = new Date();	
 	// 将两个日期转成毫秒值,Date类的方法getTime
@@ -325,8 +322,6 @@ public static void function() throws Exception {
 ###  概念
 
 日历我们都见过
-
-![](img\日历.jpg)
 
 `java.util.Calendar`是日历类，在Date后出现，替换掉了许多Date的方法。该类将所有可能用到的时间信息封装为静态成员变量，方便获取。日历类就是方便获取各个时间属性的。
 
@@ -506,7 +501,7 @@ public class SystemTest1 {
 
 ### 练习
 
-将src数组中前3个元素，复制到dest数组的前3个位置上复制元素前：src数组元素[1,2,3,4,5]，dest数组元素[6,7,8,9,10]复制元素后：src数组元素[1,2,3,4,5]，dest数组元素[1,2,3,9,10]
+将src数组中前3个元素，复制到dest数组的前3个位置上。复制元素前：src数组元素[1,2,3,4,5]，dest数组元素[6,7,8,9,10]复制元素后：src数组元素[1,2,3,4,5]，dest数组元素[1,2,3,9,10]
 
 ```java
 import java.util.Arrays;
@@ -544,7 +539,7 @@ public class StringDemo {
 
 根据这句话分析我们的代码，其实总共产生了三个字符串，即`"Hello"`、`"World"`和`"HelloWorld"`。引用变量s首先指向`Hello`对象，最终指向拼接出来的新字符串对象，即`HelloWord` 。
 
-![](img\String拼接问题.bmp)
+
 
 由此可知，如果对字符串进行拼接操作，每次拼接，都会构建一个新的String对象，既耗时，又浪费空间。为了解决这一问题，可以使用`java.lang.StringBuilder`类。
 
@@ -555,8 +550,6 @@ public class StringDemo {
 原来StringBuilder是个字符串的缓冲区，即它是一个容器，容器中可以装很多字符串。并且能够对其中的字符串进行各种操作。
 
 它的内部拥有一个数组用来存放字符串内容，进行字符串拼接时，直接在数组中加入新内容。StringBuilder会自动维护数组的扩容。原理如下图所示：(默认16字符空间，超过自动扩充)
-
-![06-StringBuilder的原理](img\06-StringBuilder的原理.png)
 
 ## 4.3 构造方法
 
